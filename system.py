@@ -11,4 +11,14 @@ class systemInformation:
         return cls._instance
     
     # Множество скобок
-    _brackets = [1,2,3]
+    _brackets = [
+        ['(', ')'], 
+        ['[', ']'], 
+        ['{', '}'], 
+        ['<', '>'],
+        ["A", "a"],
+        ["B", "b"],
+        ["C", "c"],
+        ["D", "d"],
+        ["E", "e"],
+        ["F", "f"]]
