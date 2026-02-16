@@ -1,0 +1,9 @@
+{
+    "app_name": "BracketChecker Pro",
+
+    "supported_brackets": [
+        ["(", ")"],
+        ["[", "]"],
+        ["{", "}"]
+    ]
+}

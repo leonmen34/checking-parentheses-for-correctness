@@ -1,18 +1,34 @@
+# Структура данных стек
 from collections import deque
+
 from functools import wraps
 import re
 
+# Для работы с json файлами
+import json
+import sys
 
-from system import systemInformation
+# Глобальные переменные для настроек
+BRACKETS_CONFIG = []
+APP_CONFIG = {} # Сюда загрузим всё остальное
+
+def load_json(filename = 'settings.json'):
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            return data
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Ошибка загрузки настроек: {e}")
+        return None
 
 def clean_input_decorator(func):
     @wraps(func)
     def wrapper(user_input, *args, **kwargs):
-        # ЛОГИКА ДО: Очистка строки
-        # Оставляем только скобки из systemInformation._brackets
+        # Очистка строки
+        # Оставляем только скобки из файла settings.json supported_brackets
         allowed_chars = list()
 
-        for pair in info._brackets:
+        for pair in BRACKETS_CONFIG:
             allowed_chars.extend(pair)
 
         # Если в списке есть '[', re.escape превратит его в '\['
@@ -31,7 +47,7 @@ def clean_input_decorator(func):
 def checking_parentheses_for_correctness(inputData: str, *args, **kwargs) -> bool:
     system_deque = deque()
     # Создаем словарь соответствий: {закрывающая: открывающая}
-    system_dict = {closed: opened for opened, closed in info._brackets}
+    system_dict = {closed: opened for opened, closed in BRACKETS_CONFIG}
     # Набор всех открывающих скобок для быстрой проверки
     opening_brackets = set(system_dict.values())
 
@@ -53,7 +69,24 @@ def checking_parentheses_for_correctness(inputData: str, *args, **kwargs) -> boo
 
 if __name__=="__main__":
 
-    info = systemInformation()
+    APP_CONFIG = load_json('settings.json')
+    
+    if APP_CONFIG:
+        # Достаем конкретно скобки по ключу "supported_brackets"
+        # Если ключа нет, вернет пустой список []
+        BRACKETS_CONFIG = APP_CONFIG.get("supported_brackets", [])
+        
+            
+    else:
+        print("Не удалось прочитать файл настроек.")
+        sys.exit()
+
+    # Проверка, что скобки загрузились
+    if not BRACKETS_CONFIG:
+        print("Ошибка: Список скобок пуст или не найден в JSON")
+        sys.exit()
+
+    print(*APP_CONFIG)
     result = None
 
     user_input = input()
