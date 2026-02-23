@@ -140,7 +140,3 @@ class SplitApp(App):
         user_text = input_widget.value
         result = controller.main(user_text)
         panel.update_result(result)
-
-
-if __name__ == "__main__":
-    SplitApp().run()
